@@ -1,6 +1,7 @@
 package com.team3316.dbugsimon;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -9,7 +10,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SimonClient {
+public class SimonClient extends WebSocketClient{
     public interface NextHandler {
         void onMessage(int index);
     }
@@ -59,12 +60,15 @@ public class SimonClient {
         private int count;       // for "users" message -- sent only by server
         private String message;  // for "error" message
 
-        public MessageType getType() {
-            return MessageType.fromValue(type);
+        public Message(MessageType type) {
+            this.type = type.value;
         }
 
-        public void setType(MessageType type) {
-            this.type = type.value;
+        public MessageType getType() {
+            if (type == null)
+                return null;
+
+            return MessageType.fromValue(type);
         }
 
         public int getIndex() {
@@ -97,15 +101,37 @@ public class SimonClient {
 
     }
 
-    private WebSocketClient mWebSocketClient;
     private NextHandler nextHandler;
     private PlayHandler playHandler;
     private UsersHandler usersHandler;
     private ErrorHandler errorHandler;
     private Gson gson = new Gson();
 
-    private void handleMessage(Message message) throws Exception {
-        switch (message.getType()) {
+    @Override
+    public void onOpen(ServerHandshake handshakedata) {
+        System.out.printf("Opened connection: %d - %s",
+                handshakedata.getHttpStatus(),
+                handshakedata.getHttpStatusMessage());
+    }
+
+    @Override
+    public void onMessage(String rawMessage) {
+        Message message;
+
+        try {
+            message = gson.fromJson(rawMessage, Message.class);
+        } catch (JsonSyntaxException ex) {
+            System.err.printf("Bad json format message: %s\n", rawMessage);
+            return;
+        }
+
+        MessageType type = message.getType();
+        if (type == null) {
+            System.err.printf("Undefined message type: %s\n", rawMessage);
+            return;
+        }
+
+        switch (type) {
             case NEXT:
                 nextHandler.onMessage(message.getIndex());
                 return;
@@ -117,68 +143,47 @@ public class SimonClient {
                 return;
             case ERROR:
                 errorHandler.onMessage(message.getMessage());
-                return;
-            default:
-                throw new Exception("Unknown message type " + message.getType());
+
         }
     }
 
+    @Override
+    public void onClose(int code, String reason, boolean remote) {
+        System.err.printf("Closed connection: %d - %s %s\n",
+                code,
+                reason,
+                remote ? "remote" : "local");
+    }
+
+    @Override
+    public void onError(Exception ex) {
+        ex.printStackTrace();
+    }
+
     public SimonClient(URI serverURI, NextHandler nextHandler, PlayHandler playHandler, UsersHandler usersHandler, ErrorHandler errorHandler) {
+        super(serverURI);
+
         this.nextHandler = nextHandler;
         this.playHandler = playHandler;
         this.usersHandler = usersHandler;
         this.errorHandler = errorHandler;
-
-        mWebSocketClient = new WebSocketClient(serverURI) {
-            @Override
-            public void onOpen(ServerHandshake handshakedata) {
-            }
-
-            @Override
-            public void onMessage(String rawMessage) {
-                Message message = gson.fromJson(rawMessage, Message.class);
-                try {
-                    handleMessage(message);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onClose(int code, String reason, boolean remote) {
-            }
-
-            @Override
-            public void onError(Exception ex) {
-                ex.printStackTrace();
-            }
-        };
-
-        try {
-            mWebSocketClient.connectBlocking();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public void signalNext(int index) {
-        Message message = new Message();
-        message.setType(MessageType.NEXT);
+        Message message = new Message(MessageType.NEXT);
         message.setIndex(index);
-        mWebSocketClient.send(gson.toJson(message));
+        send(gson.toJson(message));
     }
 
     public void signalPlay(int position) {
-        Message message = new Message();
-        message.setType(MessageType.PLAY);
+        Message message = new Message(MessageType.PLAY);
         message.setPosition(position);
-        mWebSocketClient.send(gson.toJson(message));
+        send(gson.toJson(message));
     }
 
     public void signalError(String errorMessage) {
-        Message message = new Message();
-        message.setType(MessageType.ERROR);
+        Message message = new Message(MessageType.ERROR);
         message.setMessage(errorMessage);
-        mWebSocketClient.send(gson.toJson(message));
+        send(gson.toJson(message));
     }
 }
