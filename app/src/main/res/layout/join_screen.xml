@@ -7,4 +7,49 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.JoinFragment">
 
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Game Name"
+        android:textAlignment="center"
+        android:textSize="60sp"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ServerIP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Server IP"
+        android:layout_marginTop="80sp"
+        android:layout_marginHorizontal="60sp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/GameID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Game ID"
+        android:layout_marginTop="20sp"
+        android:layout_marginHorizontal="60sp"
+        android:layout_marginBottom="60sp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/JoinButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Join"
+        android:textSize="40sp"
+        android:layout_marginHorizontal="110sp"
+        android:layout_gravity="center"/>
+
 </LinearLayout>
