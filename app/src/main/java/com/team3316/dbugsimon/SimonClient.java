@@ -109,7 +109,7 @@ public class SimonClient extends WebSocketClient{
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.printf("Opened connection: %d - %s",
+        System.out.printf("Opened connection: %d - %s\n",
                 handshakedata.getHttpStatus(),
                 handshakedata.getHttpStatusMessage());
     }
