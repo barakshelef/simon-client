@@ -4,13 +4,12 @@ public class SongStorage {
     // TODO: implement
     public int length = 0;
 
-    static SongStorage m_instance = null;
-
-    public SongStorage() {
-        m_instance = this;
-    }
+    private static SongStorage m_instance = null;
 
     public static SongStorage getInstance() {
+        if (m_instance == null) {
+            m_instance = new SongStorage();
+        }
         return m_instance;
     }
 
