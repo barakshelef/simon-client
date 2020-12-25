@@ -18,7 +18,7 @@ public class GameState {
     }
 
     public void startGame(int totalPlayers) {
-        this.songSequence = generateSequence(this.gameId, this.song.length, totalPlayers);
+        this.songSequence = generateSequence(this.gameId, this.song.length(), totalPlayers);
     }
 
     public void setIndex(int index) {

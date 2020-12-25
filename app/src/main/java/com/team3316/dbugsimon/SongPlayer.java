@@ -5,7 +5,7 @@ import android.media.MediaPlayer;
 
 public class SongPlayer implements MediaPlayer.OnCompletionListener {
     private Context context;
-    private int[] notes;
+    private Song song;
     private boolean isPlaying = false;
     private int index = 0;
     private int position = 0;
@@ -16,7 +16,7 @@ public class SongPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void setSong(Song song) {
-        this.notes = song.notes;
+        this.song = song;
     }
 
     public void playNote(int resid) {
@@ -26,12 +26,13 @@ public class SongPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void playIndex(int index) {
-        if (index >= notes.length) return;
-        playNote(notes[index]);
+        int note = song.getNote(index);
+        if (note < 0) return;
+        playNote(note);
     }
 
     public void playSong(int position) {
-        if (this.notes == null) return;
+        if (this.song == null) return;
 
         this.index = 0;
         this.position = position;

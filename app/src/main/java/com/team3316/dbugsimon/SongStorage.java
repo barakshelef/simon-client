@@ -15,7 +15,7 @@ public class SongStorage {
 
     public Song getSong(int id) {
         // TODO: implement
-        return new Song();
+        return new Song(new int[]{});
     }
 
 }
