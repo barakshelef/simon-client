@@ -24,14 +24,15 @@ public class GameStateTest {
 
     @Test
     public void pickSong_sanity() {
-        songStorage.length = 10;
+        Mockito.when(songStorage.length()).thenReturn(10);
+        Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(new Song(new int[0]));
         new GameState(1, 2);
         Mockito.verify(songStorage).getSong(5);
     }
 
     @Test
     public void startGame_sanity() {
-        songStorage.length = 10;
+        Mockito.when(songStorage.length()).thenReturn(10);
         Song testSong = new Song(new int[5]);
         Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
@@ -50,7 +51,7 @@ public class GameStateTest {
 
     @Test
     public void isMyIndex_sanity() {
-        songStorage.length = 1;
+        Mockito.when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
         Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
@@ -61,7 +62,7 @@ public class GameStateTest {
 
     @Test
     public void isMyPosition_sanity() {
-        songStorage.length = 1;
+        Mockito.when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
         Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
@@ -72,7 +73,7 @@ public class GameStateTest {
 
     @Test
     public void isMyIndex_outOfRange() {
-        songStorage.length = 1;
+        Mockito.when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
         Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
@@ -83,7 +84,7 @@ public class GameStateTest {
 
     @Test
     public void isMyPosition_outOfRange() {
-        songStorage.length = 1;
+        Mockito.when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
         Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
@@ -94,7 +95,7 @@ public class GameStateTest {
 
     @Test
     public void resetState() {
-        songStorage.length = 1;
+        Mockito.when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
         Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);

@@ -1,10 +1,40 @@
 package com.team3316.dbugsimon;
 
 public class SongStorage {
-    // TODO: implement
-    public int length = 0;
-
     private static SongStorage m_instance = null;
+    private Song[] songs;
+
+    private SongStorage() {
+        songs = new Song[]{
+                new Song(new int[]{  // Mary had a little lamb
+                        R.raw.e4,
+                        R.raw.d4,
+                        R.raw.c4,
+                        R.raw.d4,
+                        R.raw.e4,
+                        R.raw.e4,
+                        R.raw.e4,
+                        R.raw.d4,
+                        R.raw.d4,
+                        R.raw.d4,
+                        R.raw.e4,
+                        R.raw.g4,
+                        R.raw.g4,
+                        R.raw.e4,
+                        R.raw.d4,
+                        R.raw.c4,
+                        R.raw.d4,
+                        R.raw.e4,
+                        R.raw.e4,
+                        R.raw.e4,
+                        R.raw.d4,
+                        R.raw.d4,
+                        R.raw.e4,
+                        R.raw.d4,
+                        R.raw.c4
+                })
+        };
+    }
 
     public static SongStorage getInstance() {
         if (m_instance == null) {
@@ -13,9 +43,13 @@ public class SongStorage {
         return m_instance;
     }
 
+    public int length() {
+        return songs.length;
+    }
+
     public Song getSong(int id) {
-        // TODO: implement
-        return new Song(new int[]{});
+        if (id >= length()) return null;
+        return songs[id];
     }
 
 }

@@ -49,7 +49,7 @@ public class GameState {
     private static Song pickSong(long seed) {
         Random random = new Random(seed);
         SongStorage storage = SongStorage.getInstance();
-        return storage.getSong(random.nextInt(storage.length));
+        return storage.getSong(random.nextInt(storage.length()));
     }
 
     private static int[] generateSequence(long seed, int length, int players) {
