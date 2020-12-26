@@ -3,12 +3,12 @@ package com.team3316.dbugsimon;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class GameStateTest {
@@ -18,23 +18,23 @@ public class GameStateTest {
         SongStorage originalSongStorage = SongStorage.getInstance();
         Field instance = originalSongStorage.getClass().getDeclaredField("m_instance");
         instance.setAccessible(true);
-        songStorage = Mockito.spy(originalSongStorage);
+        songStorage = spy(originalSongStorage);
         instance.set(originalSongStorage, songStorage);
     }
 
     @Test
     public void pickSong_sanity() {
-        Mockito.when(songStorage.length()).thenReturn(10);
-        Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(new Song(new int[0]));
+        when(songStorage.length()).thenReturn(10);
+        when(songStorage.getSong(anyInt())).thenReturn(new Song(new int[0]));
         new GameState(1, 2);
-        Mockito.verify(songStorage).getSong(5);
+        verify(songStorage).getSong(5);
     }
 
     @Test
     public void startGame_sanity() {
-        Mockito.when(songStorage.length()).thenReturn(10);
+        when(songStorage.length()).thenReturn(10);
         Song testSong = new Song(new int[5]);
-        Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
+        when(songStorage.getSong(anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
         state.startGame(3);
         state.setIndex(0);
@@ -51,9 +51,9 @@ public class GameStateTest {
 
     @Test
     public void isMyIndex_sanity() {
-        Mockito.when(songStorage.length()).thenReturn(1);
+        when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
-        Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
+        when(songStorage.getSong(anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
         state.startGame(1);
         state.setIndex(0);
@@ -62,9 +62,9 @@ public class GameStateTest {
 
     @Test
     public void isMyPosition_sanity() {
-        Mockito.when(songStorage.length()).thenReturn(1);
+        when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
-        Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
+        when(songStorage.getSong(anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
         state.startGame(1);
         state.setPosition(0);
@@ -73,9 +73,9 @@ public class GameStateTest {
 
     @Test
     public void isMyIndex_outOfRange() {
-        Mockito.when(songStorage.length()).thenReturn(1);
+        when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
-        Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
+        when(songStorage.getSong(anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
         state.startGame(1);
         state.setIndex(1);
@@ -84,9 +84,9 @@ public class GameStateTest {
 
     @Test
     public void isMyPosition_outOfRange() {
-        Mockito.when(songStorage.length()).thenReturn(1);
+        when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
-        Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
+        when(songStorage.getSong(anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
         state.startGame(1);
         state.setPosition(1);
@@ -95,9 +95,9 @@ public class GameStateTest {
 
     @Test
     public void resetState() {
-        Mockito.when(songStorage.length()).thenReturn(1);
+        when(songStorage.length()).thenReturn(1);
         Song testSong = new Song(new int[1]);
-        Mockito.when(songStorage.getSong(Mockito.anyInt())).thenReturn(testSong);
+        when(songStorage.getSong(anyInt())).thenReturn(testSong);
         GameState state = new GameState(1,0);
         state.startGame(1);
         state.setIndex(1);

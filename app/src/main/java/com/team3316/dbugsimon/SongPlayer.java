@@ -24,7 +24,7 @@ public class SongPlayer extends MediaPlayer implements MediaPlayer.OnCompletionL
 
     public void playNote(int resid) {
         AssetFileDescriptor afd = context.getResources().openRawResourceFd(resid);
-        if (afd == null) return;
+        if (afd == null) return;  // If compressed resource
 
         try {
             setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());

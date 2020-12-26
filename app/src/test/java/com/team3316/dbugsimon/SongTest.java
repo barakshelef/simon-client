@@ -1,12 +1,9 @@
 package com.team3316.dbugsimon;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
 public class SongTest {
     @Test
     public void length_sanity() {

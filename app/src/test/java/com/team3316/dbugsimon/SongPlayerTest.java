@@ -1,95 +1,136 @@
 package com.team3316.dbugsimon;
 
 import android.content.Context;
-import android.media.MediaPlayer;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.io.FileDescriptor;
+import java.io.IOException;
+
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SongPlayerTest {
-    @Spy
-    MediaPlayer mediaPlayer = new MediaPlayer();
     @Mock
-    Context ctx;
-    @InjectMocks
+    Context context;
+    @Mock
+    Resources resources;
+
     SongPlayer songPlayer;
+
+    @Before
+    public void createSongPlayer() {
+        songPlayer = spy(new SongPlayer(context));
+    }
+
+    @Test
+    public void playNote_sanity() throws IOException {
+        when(context.getResources()).thenReturn(resources);
+        AssetFileDescriptor afd = mock(AssetFileDescriptor.class);
+        FileDescriptor fd = mock(FileDescriptor.class);
+        when(afd.getFileDescriptor()).thenReturn(fd);
+        when(afd.getStartOffset()).thenReturn(0L);
+        when(afd.getLength()).thenReturn(0L);
+        when(resources.openRawResourceFd(1)).thenReturn(afd);
+        doNothing().when(songPlayer).setDataSource(fd, 0L, 0L);
+        doNothing().when(songPlayer).setOnCompletionListener(songPlayer);
+        doNothing().when(songPlayer).prepare();
+        doNothing().when(songPlayer).start();
+
+        songPlayer.playNote(1);
+        verify(songPlayer).prepare();
+        verify(songPlayer).setOnCompletionListener(songPlayer);
+        verify(songPlayer).start();
+    }
+
+    @Test
+    public void playNote_compressedResource() throws IOException {
+        when(context.getResources()).thenReturn(resources);
+        when(resources.openRawResourceFd(anyInt())).thenReturn(null);
+
+        songPlayer.playNote(1);
+        verify(songPlayer, times(0)).prepare();
+    }
+
+    @Test
+    public void playNote_IOException() throws IOException {
+        when(context.getResources()).thenReturn(resources);
+        AssetFileDescriptor afd = mock(AssetFileDescriptor.class);
+        FileDescriptor fd = mock(FileDescriptor.class);
+        when(afd.getFileDescriptor()).thenReturn(fd);
+        when(afd.getStartOffset()).thenReturn(0L);
+        when(afd.getLength()).thenReturn(0L);
+        when(resources.openRawResourceFd(1)).thenReturn(afd);
+        doThrow(IOException.class).when(songPlayer).setDataSource(fd,0L, 0L);
+
+        songPlayer.playNote(1);
+        verify(songPlayer, times(0)).prepare();
+    }
 
     @Test
     public void playIndex_sanity() {
-        SongPlayer spySongPlayer = Mockito.spy(songPlayer);
-        Mockito.doNothing().when(spySongPlayer).playNote(Mockito.anyInt());
+        doNothing().when(songPlayer).playNote(anyInt());
         Song song = new Song(new int[]{2});
-        spySongPlayer.setSong(song);
-        spySongPlayer.playIndex(0);
-        Mockito.verify(spySongPlayer).playNote(2);
+        songPlayer.setSong(song);
+        songPlayer.playIndex(0);
+        verify(songPlayer).playNote(2);
     }
 
     @Test
     public void playIndex_outOfRange() {
-        SongPlayer spySongPlayer = Mockito.spy(songPlayer);
-        Mockito.doNothing().when(spySongPlayer).playNote(Mockito.anyInt());
+        doNothing().when(songPlayer).playNote(anyInt());
         Song song = new Song(new int[]{3,4});
-        spySongPlayer.setSong(song);
-        spySongPlayer.playIndex(2);
-        Mockito.verify(spySongPlayer, Mockito.times(0))
-                .playNote(Mockito.anyInt());
+        songPlayer.setSong(song);
+        songPlayer.playIndex(2);
+        verify(songPlayer, times(0)).playNote(anyInt());
     }
 
     @Test
     public void playSong_sanity() {
-        SongPlayer spySongPlayer = Mockito.spy(songPlayer);
-        Mockito.doNothing().when(spySongPlayer).playIndex(Mockito.anyInt());
+        doNothing().when(songPlayer).playIndex(anyInt());
         Song song = new Song(new int[]{5});
-        spySongPlayer.setSong(song);
-        spySongPlayer.playSong(0);
-        Mockito.verify(spySongPlayer).playIndex(0);
-        Mockito.verify(spySongPlayer, Mockito.times(1))
-                .playIndex(Mockito.anyInt());
+        songPlayer.setSong(song);
+        songPlayer.playSong(0);
+        verify(songPlayer).playIndex(0);
+        verify(songPlayer, times(1)).playIndex(anyInt());
     }
 
     @Test
     public void playSong_noSongSet() {
-        SongPlayer spySongPlayer = Mockito.spy(songPlayer);
-        Mockito.doNothing().when(spySongPlayer).playIndex(Mockito.anyInt());
-        spySongPlayer.playSong(0);
-        Mockito.verify(spySongPlayer, Mockito.times(0))
-                .playIndex(Mockito.anyInt());
+        doNothing().when(songPlayer).playIndex(anyInt());
+        songPlayer.playSong(0);
+        verify(songPlayer, times(0)).playIndex(anyInt());
     }
 
     @Test
     public void onCompletion_sanity() {
-        SongPlayer spySongPlayer = Mockito.spy(songPlayer);
-        Mockito.doNothing().when(spySongPlayer).playIndex(Mockito.anyInt());
-        Mockito.doNothing().when(spySongPlayer).reset();
+        doNothing().when(songPlayer).playIndex(anyInt());
+        doNothing().when(songPlayer).reset();
         Song song = new Song(new int[]{6,7});
-        spySongPlayer.setSong(song);
-        spySongPlayer.playSong(1);
-        spySongPlayer.onCompletion(spySongPlayer);
-        spySongPlayer.onCompletion(spySongPlayer);
-        Mockito.verify(spySongPlayer).playIndex(0);
-        Mockito.verify(spySongPlayer).playIndex(1);
-        Mockito.verify(spySongPlayer, Mockito.times(2))
-                .playIndex(Mockito.anyInt());
+        songPlayer.setSong(song);
+        songPlayer.playSong(1);
+        songPlayer.onCompletion(songPlayer);
+        songPlayer.onCompletion(songPlayer);
+        verify(songPlayer).playIndex(0);
+        verify(songPlayer).playIndex(1);
+        verify(songPlayer, times(2)).playIndex(anyInt());
 
     }
 
     @Test
     public void onCompletion_notPlaying() {
-        SongPlayer spySongPlayer = Mockito.spy(songPlayer);
-        Mockito.doNothing().when(spySongPlayer).playIndex(Mockito.anyInt());
-        Mockito.doNothing().when(spySongPlayer).reset();
+        doNothing().when(songPlayer).playIndex(anyInt());
+        doNothing().when(songPlayer).reset();
         Song song = new Song(new int[]{});
-        spySongPlayer.setSong(song);
-        spySongPlayer.onCompletion(spySongPlayer);
-        Mockito.verify(spySongPlayer, Mockito.times(0))
-                .playIndex(Mockito.anyInt());
+        songPlayer.setSong(song);
+        songPlayer.onCompletion(songPlayer);
+        verify(songPlayer, times(0)).playIndex(anyInt());
     }
 
 }

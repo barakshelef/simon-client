@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SimonClientTest {
@@ -136,30 +137,30 @@ public class SimonClientTest {
 
     @Test
     public void onMessage_NEXT_sanity() {
-        Mockito.doNothing().when(mockNextHandler).onMessage(Mockito.anyInt());
+        doNothing().when(mockNextHandler).onMessage(anyInt());
         client.onMessage("{\"type\": \"next\", \"index\": 1}");
-        Mockito.verify(mockNextHandler, Mockito.times(1)).onMessage(1);
+        verify(mockNextHandler, times(1)).onMessage(1);
     }
 
     @Test
     public void onMessage_PLAY_sanity() {
-        Mockito.doNothing().when(mockPlayHandler).onMessage(Mockito.anyInt());
+        doNothing().when(mockPlayHandler).onMessage(anyInt());
         client.onMessage("{\"type\": \"play\", \"position\": 2}");
-        Mockito.verify(mockPlayHandler, Mockito.times(1)).onMessage(2);
+        verify(mockPlayHandler, times(1)).onMessage(2);
     }
 
     @Test
     public void onMessage_ERROR_sanity() {
-        Mockito.doNothing().when(mockErrorHandler).onMessage(Mockito.anyString());
+        doNothing().when(mockErrorHandler).onMessage(anyString());
         client.onMessage("{\"type\": \"error\", \"message\": \"BANANA\"}");
-        Mockito.verify(mockErrorHandler, Mockito.times(1)).onMessage("BANANA");
+        verify(mockErrorHandler, times(1)).onMessage("BANANA");
     }
 
     @Test
     public void onMessage_USERS_sanity() {
-        Mockito.doNothing().when(mockUsersHandler).onMessage(Mockito.anyInt());
+        doNothing().when(mockUsersHandler).onMessage(anyInt());
         client.onMessage("{\"type\": \"users\", \"count\": 3}");
-        Mockito.verify(mockUsersHandler, Mockito.times(1)).onMessage(3);
+        verify(mockUsersHandler, times(1)).onMessage(3);
     }
 
     @Test
@@ -179,33 +180,33 @@ public class SimonClientTest {
 
     @Test
     public void onMessage_full_message() {
-        Mockito.doNothing().when(mockNextHandler).onMessage(Mockito.anyInt());
+        doNothing().when(mockNextHandler).onMessage(anyInt());
         client.onMessage("{\"type\": \"next\", \"index\": 4, \"position\": 5, \"count\": 6, \"message\": \"apple\"}");
-        Mockito.verify(mockNextHandler, Mockito.times(1)).onMessage(4);
+        verify(mockNextHandler, times(1)).onMessage(4);
     }
 
     @Test
     public void signalNext_sanity() {
-        SimonClient spyClient = Mockito.spy(client);
-        Mockito.doNothing().when(spyClient).send(Mockito.anyString());
+        SimonClient spyClient = spy(client);
+        doNothing().when(spyClient).send(anyString());
         spyClient.signalNext(7);
-        Mockito.verify(spyClient).send("{\"type\":\"next\",\"index\":7,\"position\":0,\"count\":0}");
+        verify(spyClient).send("{\"type\":\"next\",\"index\":7,\"position\":0,\"count\":0}");
     }
 
     @Test
     public void signalPlay_sanity() {
-        SimonClient spyClient = Mockito.spy(client);
-        Mockito.doNothing().when(spyClient).send(Mockito.anyString());
+        SimonClient spyClient = spy(client);
+        doNothing().when(spyClient).send(anyString());
         spyClient.signalPlay(8);
-        Mockito.verify(spyClient).send("{\"type\":\"play\",\"index\":0,\"position\":8,\"count\":0}");
+        verify(spyClient).send("{\"type\":\"play\",\"index\":0,\"position\":8,\"count\":0}");
     }
 
     @Test
     public void signalError_sanity() {
-        SimonClient spyClient = Mockito.spy(client);
-        Mockito.doNothing().when(spyClient).send(Mockito.anyString());
+        SimonClient spyClient = spy(client);
+        doNothing().when(spyClient).send(anyString());
         spyClient.signalError("9");
-        Mockito.verify(spyClient).send("{\"type\":\"error\",\"index\":0,\"position\":0,\"count\":0,\"message\":\"9\"}");
+        verify(spyClient).send("{\"type\":\"error\",\"index\":0,\"position\":0,\"count\":0,\"message\":\"9\"}");
     }
 
 }
