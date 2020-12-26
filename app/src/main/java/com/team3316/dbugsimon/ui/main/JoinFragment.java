@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.team3316.dbugsimon.GameState;
 import com.team3316.dbugsimon.R;
 import com.team3316.dbugsimon.SimonClient;
 import com.team3316.dbugsimon.handlers.PrintHandler;
@@ -25,36 +26,46 @@ import java.net.URISyntaxException;
 public class JoinFragment extends Fragment {
     SimonClient client;
     View joinScreen;
+    GameState gameState;
 
     public static JoinFragment newInstance() {
         return new JoinFragment();
     }
 
+    private long getGameId() {
+        EditText editText = ((TextInputLayout) joinScreen.findViewById(R.id.GameID)).getEditText();
+        if (editText == null) return 0;
+
+        return Long.parseLong(editText.getText().toString());
+    }
+
+    private String getServerIp() {
+        EditText editText = ((TextInputLayout) joinScreen.findViewById(R.id.ServerIP)).getEditText();
+        if (editText == null) return "localhost";
+
+        return editText.getText().toString();
+    }
+
     @SuppressLint("DefaultLocale")
-    static private URI createURI(View view) throws URISyntaxException {
-        String serverIp = "localhost";
-        long gameId = 0;
+    private URI createURI() throws URISyntaxException {
+        String serverIp = getServerIp();
+        long gameId = getGameId();
         int port = 3316;
-        EditText editText;
-
-        editText = ((TextInputLayout) view.findViewById(R.id.ServerIP)).getEditText();
-        if (editText != null) serverIp = editText.getText().toString();
-
-        editText = ((TextInputLayout) view.findViewById(R.id.GameID)).getEditText();
-        if (editText != null) gameId = Long.parseLong(editText.getText().toString());
 
         return new URI(String.format("ws://%s:%d/%d", serverIp, port, gameId));
     }
 
-    private void _connect() {
+    private boolean _connect() {
+        gameState = new GameState(getGameId());
         try {
             client = new SimonClient(
-                    createURI(joinScreen),
+                    createURI(),
                     new PrintHandler("next"),
                     new PrintHandler("play"),
-                    new PrintHandler("user"),
+                    new UsersHandler(gameState),
                     new PrintHandler("error"));
-        } catch (URISyntaxException e) {
+            client.connectBlocking();
+        } catch (URISyntaxException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -63,15 +74,18 @@ public class JoinFragment extends Fragment {
                     joinScreen,
                     "Unable to connect to server",
                     BaseTransientBottomBar.LENGTH_SHORT).show();
+            return false;
         } else {
             // TODO: move to next fragment
             System.out.println("Connected!");
+            return true;
         }
     }
 
-    private void _disconnect() {
+    private boolean _disconnect() {
         client.close();
         client = null;
+        return true;
     }
 
     @Nullable
@@ -86,11 +100,11 @@ public class JoinFragment extends Fragment {
             public void onClick(View view) {
                 Button button = (Button) view;
                 if (client != null && client.isOpen()) {
-                    _disconnect();
-                    button.setText(R.string.join);
+                    if (_disconnect())
+                        button.setText(R.string.join);
                 } else {
-                    _connect();
-                    button.setText(R.string.leave);
+                    if (_connect())
+                        button.setText(R.string.leave);
                 }
             }
         });
