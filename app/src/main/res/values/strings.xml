@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DBugSimon</string>
+    <string name="game_name">Game Name</string>
+    <string name="server_ip">Server IP</string>
+    <string name="game_id">Game ID</string>
+    <string name="join">Join</string>
+    <string name="leave">Leave</string>
 </resources>

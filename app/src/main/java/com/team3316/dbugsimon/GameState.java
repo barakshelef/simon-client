@@ -3,18 +3,43 @@ package com.team3316.dbugsimon;
 import java.util.Random;
 
 public class GameState {
+    static private GameState mGameState;
+
     private long gameId;
     private Song song;
-    private int playerNumber;
+
+    private int totalPlayers = 0;
+    private int playerIndex;
 
     private int[] songSequence = new int[]{};
     private int currentIndex = 0;
     private int currentPosition = 0;
 
-    public GameState(long gameId, int playerNumber) {
+    public GameState(long gameId) {
         this.gameId = gameId;
         this.song = pickSong(gameId);
-        this.playerNumber = playerNumber;
+
+        mGameState = this;
+    }
+
+    public static GameState getGameState() {
+        return mGameState;
+    }
+
+    public void setPlayerNumber(int playerIndex) {
+        this.playerIndex = playerIndex;
+    }
+
+    public int getPlayerNumber() {
+        return playerIndex + 1;
+    }
+
+    public int getTotalPlayers() {
+        return totalPlayers;
+    }
+
+    public void setTotalPlayers(int totalPlayers) {
+        this.totalPlayers = totalPlayers + 1;
     }
 
     public void startGame(int totalPlayers) {
@@ -37,13 +62,13 @@ public class GameState {
     public boolean isMyIndex() {
         if (currentIndex >= songSequence.length) return false;
 
-        return songSequence[currentIndex] == playerNumber;
+        return songSequence[currentIndex] == playerIndex;
     }
 
     public boolean isMyPosition() {
         if (currentPosition >= songSequence.length) return false;
 
-        return songSequence[currentPosition] == playerNumber;
+        return songSequence[currentPosition] == playerIndex;
     }
 
     private static Song pickSong(long seed) {
