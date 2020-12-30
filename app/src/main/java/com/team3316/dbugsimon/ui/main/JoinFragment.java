@@ -34,14 +34,14 @@ public class JoinFragment extends Fragment {
     }
 
     private long getGameId() {
-        EditText editText = ((TextInputLayout) joinScreen.findViewById(R.id.GameID)).getEditText();
+        EditText editText = ((TextInputLayout) joinScreen.findViewById(R.id.game_id_input)).getEditText();
         if (editText == null) return 0;
 
         return Long.parseLong(editText.getText().toString());
     }
 
     private String getServerIp() {
-        EditText editText = ((TextInputLayout) joinScreen.findViewById(R.id.ServerIP)).getEditText();
+        EditText editText = ((TextInputLayout) joinScreen.findViewById(R.id.server_ip_input)).getEditText();
         if (editText == null) return "localhost";
 
         return editText.getText().toString();
@@ -94,7 +94,7 @@ public class JoinFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         joinScreen = inflater.inflate(R.layout.join_screen, container, false);
-        Button joinButton = joinScreen.findViewById(R.id.JoinButton);
+        Button joinButton = joinScreen.findViewById(R.id.join_btn);
 
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
