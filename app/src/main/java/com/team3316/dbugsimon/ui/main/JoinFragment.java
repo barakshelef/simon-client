@@ -21,6 +21,7 @@ import com.team3316.dbugsimon.GameState;
 import com.team3316.dbugsimon.R;
 import com.team3316.dbugsimon.SimonClient;
 import com.team3316.dbugsimon.SongPlayer;
+import com.team3316.dbugsimon.handlers.NextHandler;
 import com.team3316.dbugsimon.handlers.PlayHandler;
 import com.team3316.dbugsimon.handlers.PrintHandler;
 import com.team3316.dbugsimon.handlers.UsersHandler;
@@ -65,7 +66,7 @@ public class JoinFragment extends Fragment {
         try {
             client = new SimonClient(
                     createURI(),
-                    new PrintHandler("next"),
+                    new NextHandler(gameState),
                     new PlayHandler(gameState),
                     new UsersHandler(gameState),
                     new PrintHandler("error"));
