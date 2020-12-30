@@ -19,6 +19,7 @@ import com.team3316.dbugsimon.GameState;
 import com.team3316.dbugsimon.R;
 import com.team3316.dbugsimon.SimonClient;
 import com.team3316.dbugsimon.handlers.PrintHandler;
+import com.team3316.dbugsimon.handlers.UsersHandler;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -93,7 +94,7 @@ public class JoinFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         joinScreen = inflater.inflate(R.layout.join_screen, container, false);
-        Button joinButton = (Button) joinScreen.findViewById(R.id.JoinButton);
+        Button joinButton = joinScreen.findViewById(R.id.JoinButton);
 
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override

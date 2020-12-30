@@ -1,4 +1,4 @@
-package com.team3316.dbugsimon.ui.main;
+package com.team3316.dbugsimon.handlers;
 
 import com.team3316.dbugsimon.GameState;
 import com.team3316.dbugsimon.SimonClient;
