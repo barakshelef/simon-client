@@ -8,7 +8,7 @@
     tools:context=".ui.main.JoinFragment">
 
     <TextView
-        android:id="@+id/Title"
+        android:id="@+id/title_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/game_name"
@@ -17,7 +17,7 @@
         />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ServerIP"
+        android:id="@+id/server_ip_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/server_ip"
@@ -30,7 +30,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/GameID"
+        android:id="@+id/game_id_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/game_id"
@@ -45,7 +45,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/JoinButton"
+        android:id="@+id/join_btn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="@string/join"
