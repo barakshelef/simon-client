@@ -16,6 +16,7 @@ public class PlayHandler implements SimonClient.PlayHandler, MediaPlayer.OnCompl
 
     @Override
     public void onMessage(int position) {
+        state.setIndex(0);
         SongPlayer player = state.getSongPlayer();
         player.setOnSongCompletionListener(this);
         player.playSong(position);
@@ -23,6 +24,6 @@ public class PlayHandler implements SimonClient.PlayHandler, MediaPlayer.OnCompl
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        state.getSimonClient().signalNext(0);
+        if (state.isMyIndex()) state.getSimonClient().signalNext(0);
     }
 }
