@@ -15,6 +15,25 @@ public class GameState {
     private int currentIndex = 0;
     private int currentPosition = 0;
 
+    private SimonClient simonClient;
+    private SongPlayer songPlayer;
+
+    public SimonClient getSimonClient() {
+        return simonClient;
+    }
+
+    public void setSimonClient(SimonClient simonClient) {
+        this.simonClient = simonClient;
+    }
+
+    public SongPlayer getSongPlayer() {
+        return songPlayer;
+    }
+
+    public void setSongPlayer(SongPlayer songPlayer) {
+        this.songPlayer = songPlayer;
+    }
+
     public GameState(long gameId) {
         this.gameId = gameId;
         this.song = pickSong(gameId);
@@ -57,6 +76,10 @@ public class GameState {
     public void resetState() {
         this.currentIndex = 0;
         this.currentPosition = 0;
+    }
+
+    public int getIndex() {
+        return currentIndex;
     }
 
     public boolean isMyIndex() {
