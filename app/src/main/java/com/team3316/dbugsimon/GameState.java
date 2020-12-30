@@ -32,6 +32,7 @@ public class GameState {
 
     public void setSongPlayer(SongPlayer songPlayer) {
         this.songPlayer = songPlayer;
+        this.songPlayer.setSong(song);
     }
 
     public GameState(long gameId) {
@@ -61,7 +62,7 @@ public class GameState {
         this.totalPlayers = totalPlayers + 1;
     }
 
-    public void startGame(int totalPlayers) {
+    public void startGame() {
         this.songSequence = generateSequence(this.gameId, this.song.length(), totalPlayers);
     }
 
@@ -80,6 +81,10 @@ public class GameState {
 
     public int getIndex() {
         return currentIndex;
+    }
+
+    public int getPosition() {
+        return currentPosition;
     }
 
     public boolean isMyIndex() {

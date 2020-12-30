@@ -33,6 +33,7 @@ public class GameFragment extends Fragment {
                     if (gs.isMyIndex()) {
                         gs.getSongPlayer().playIndex(gs.getIndex());
                         gs.getSimonClient().signalNext(gs.getIndex() + 1);
+                        if (gs.getIndex() == gs.getPosition()) gs.getSimonClient().signalPlay(gs.getPosition() + 1);
                     } else {
                         gs.getSongPlayer().playNote(R.raw.d3);
                         gs.getSimonClient().signalError("Mistake!");

@@ -30,6 +30,7 @@ public class StartFragment extends Fragment
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                GameState.getGameState().startGame();
                 GameState.getGameState().getSimonClient().signalPlay(0);
                 getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, GameFragment.newInstance())

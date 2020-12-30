@@ -17,6 +17,7 @@ public class PlayHandler implements SimonClient.PlayHandler, MediaPlayer.OnCompl
     @Override
     public void onMessage(int position) {
         state.setIndex(0);
+        state.setPosition(position);
         SongPlayer player = state.getSongPlayer();
         player.setOnSongCompletionListener(this);
         player.playSong(position);

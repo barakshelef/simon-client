@@ -13,8 +13,10 @@ public class NextHandler implements SimonClient.NextHandler {
 
     @Override
     public void onMessage(int index) {
-        state.setIndex(index - 1);
-        if (state.isMyIndex()) state.getSongPlayer().playIndex(state.getIndex());
+        if (index > 0) {
+            state.setIndex(index - 1);
+            if (state.isMyIndex()) state.getSongPlayer().playIndex(state.getIndex());
+        }
         state.setIndex(index);
     }
 }
