@@ -11,6 +11,8 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -77,7 +79,12 @@ public class JoinFragment extends Fragment {
                     BaseTransientBottomBar.LENGTH_SHORT).show();
             return false;
         } else {
-            // TODO: move to next fragment
+            Fragment fragment = new StartFragment();
+
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.replace(R.id.container, fragment);
+            transaction.commit();
             System.out.println("Connected!");
             return true;
         }
