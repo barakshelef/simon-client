@@ -12,6 +12,7 @@ public class SongPlayer extends MediaPlayer implements MediaPlayer.OnCompletionL
     private boolean isPlaying = false;
     private int index = 0;
     private int position = 0;
+    private OnCompletionListener onSongCompletionListener;
 
     public SongPlayer(Context context) {
         super();
@@ -53,13 +54,22 @@ public class SongPlayer extends MediaPlayer implements MediaPlayer.OnCompletionL
         playIndex(0);
     }
 
+    public void setOnSongCompletionListener(OnCompletionListener listener) {
+        onSongCompletionListener = listener;
+    }
+
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         reset();
 
-        if (isPlaying && ++index <= position) {
+        if (!isPlaying)
+            return;
+
+        if (++index <= position) {
             playIndex(index);
         } else {
+            if (onSongCompletionListener != null)
+                onSongCompletionListener.onCompletion(mediaPlayer);
             this.index = 0;
             this.position = 0;
             this.isPlaying = false;
